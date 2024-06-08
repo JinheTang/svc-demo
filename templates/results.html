@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        a{
+            margin: 0 auto
+            
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>SoVITS Inference Results</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+</head>
+<body>
+    <h1>SoVITS Inference Results</h1>
+    <ul>
+        {% for path in result_paths %}
+        <li><a href="{{ url_for('download', filename=path) }}">{{ path }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="/">Go Back</a>
+</body>
+</html>

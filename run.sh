@@ -1,0 +1,1 @@
+python inference_main.py -c logs\44k\ye200k\config.json -m logs\44k\ye200k\G_199200.pth -n ÈËÉùÑù±¾1_Freesound.wav -s "aimodel"

@@ -1,0 +1,53 @@
+
+label{
+    margin: 5%;
+    width: 20%;
+}
+
+input, select{
+    margin: 10px auto 30px;
+    margin-left: 15px;
+    width: 95%;
+}
+
+.form-container {
+    position: relative;
+    width: 40%;
+    padding: 20px;
+    margin: 40px auto 20px;
+    background: rgba(240, 248, 255, 0.399);
+    border-radius: 60px;
+}
+
+nav{
+    background-color: rgba(241, 149, 56, 0.658);
+}
+.file{
+    width: 40%;
+}
+body{
+    background-color: aliceblue;
+    font-family: "Papyrus", fantasy;
+    font-weight:bolder;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    overflow-x: hidden;
+
+}
+
+.bg{
+    background-image: url("../img/caught-in-joy-ptVBlniJi50-unsplash.jpg");
+    width: 100%;
+    backdrop-filter: blur(5px);
+    height: 100%;
+    background-size: cover;
+}
+/* .bg::before{
+    content:"";
+    position: absolute;
+    height: 100%;
+    width:100%;
+    background-color: aliceblue;
+    opacity: 0.2;
+} */

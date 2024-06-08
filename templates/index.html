@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>So-VITS Inference</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+
+<body class="bg">
+    <div style="overflow: hidden;height: 100px;">
+        <nav class="demo" style="height: 80px; background-color: aliceblue;">
+            <h1 style="text-align: center;">So-VITS Inference</h1>
+        </nav>
+    </div>
+    <div class="form-container">
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <label for="model_path">Model Path:</label>
+            <input type="text" name="model_path" value="logs/44k/ye200k/G_199200.pth"><br>
+
+            <label for="config_path">Config Path:</label>
+            <input type="text" name="config_path" value="logs/44k/ye200k/config.json"><br>
+
+            <!-- <label for="clip">Clip (seconds):</label>
+        <input type="number" name="clip" step="0.1" value="0"><br> -->
+
+            <label for="trans">Transpositions:</label>
+            <input type="number" name="trans" value="0" step="1"><br>
+
+            <label for="spk_list">Speaker:</label>
+            <input type="text" name="spk_list" value="Kanye"><br>
+
+            <!-- <label for="auto_predict_f0">Auto Predict F0:</label>
+        <input type="checkbox" name="auto_predict_f0"><br> -->
+            <!-- 
+        <label for="cluster_model_path">Cluster Model Path:</label>
+        <input type="text" name="cluster_model_path" value=""><br> -->
+
+            <!-- <label for="cluster_infer_ratio">Cluster Infer Ratio:</label>
+        <input type="number" name="cluster_infer_ratio" step="0.1" value="0"><br> -->
+
+            <!-- <label for="slice_db">Slice DB:</label>
+        <input type="number" name="slice_db" value="-40"><br> -->
+
+            <!-- <label for="noice_scale">Noise Scale:</label>
+        <input type="number" name="noice_scale" step="0.1" value="0.4"><br> -->
+
+            <!-- <label for="pad_seconds">Pad Seconds:</label>
+        <input type="number" name="pad_seconds" step="0.1" value="0.5"><br>
+
+        <label for="linear_gradient">Linear Gradient:</label>
+        <input type="number" name="linear_gradient" step="0.1" value="0"><br>
+
+        <label for="linear_gradient_retain">Linear Gradient Retain:</label>
+        <input type="number" name="linear_gradient_retain" step="0.1" value="0.75"><br> -->
+
+            <label for="f0_predictor">Predictor:</label>
+            <select id="f0_predictor" name="f0_predictor">
+                <option value="crepe">crepe</option>
+                <option value="pm">pm</option>
+                <option value="dio">dio</option>
+
+            </select>
+            <!-- 
+        <label for="enhance">Enhance:</label>
+        <input type="checkbox" name="enhance"><br>
+
+        <label for="enhancer_adaptive_key">Enhancer Adaptive Key:</label>
+        <input type="number" name="enhancer_adaptive_key" step="1" value="0"><br>
+
+        <label for="f0_filter_threshold">F0 Filter Threshold:</label>
+        <input type="number" name="f0_filter_threshold" step="0.1" value="0"><br>
+
+        <label for="diffusion_model_path">Diffusion Model Path:</label>
+        <input type="text" name="diffusion_model_path" value=""><br>
+
+        <label for="diffusion_config_path">Diffusion Config Path:</label>
+        <input type="text" name="diffusion_config_path" value=""><br>
+
+        <label for="k_step">K Step:</label>
+        <input type="number" name="k_step" step="1" value="0"><br>
+
+        <label for="only_diffusion">Only Diffusion:</label>
+        <input type="checkbox" name="only_diffusion"><br>
+
+        <label for="shallow_diffusion">Shallow Diffusion:</label>
+        <input type="checkbox" name="shallow_diffusion"><br>
+
+        <label for="use_spk_mix">Use Speaker Mix:</label>
+        <input type="checkbox" name="use_spk_mix"><br>
+
+        <label for="second_encoding">Second Encoding:</label>
+        <input type="checkbox" name="second_encoding"><br>
+
+        <label for="loudness_envelope_adjustment">Loudness Envelope Adjustment:</label>
+        <input type="number" name="loudness_envelope_adjustment" step="0.1" value="0"><br> -->
+
+            <!-- <label for="wav_format">WAV Format:</label>
+        <input type="text" name="wav_format" value="wav"><br> -->
+
+            <label for="files">Audio Files:</label>
+
+            <input type="file" name="files" multiple><br>
+            <div style="text-align: center;">
+                <button type="submit">Run Inference</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
