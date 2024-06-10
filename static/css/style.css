@@ -9,7 +9,14 @@ input, select{
     margin-left: 15px;
     width: 95%;
 }
-
+.recording{
+    background-color: aliceblue;
+    color: black;
+}
+.inputfile{
+    width: 40%;
+    margin: 10px 10px 30px 20px;
+}
 .form-container {
     position: relative;
     width: 40%;

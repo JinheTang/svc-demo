@@ -17,7 +17,7 @@ RESULT_FOLDER = 'results'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULT_FOLDER, exist_ok=True)
 
-def run_inference(model_path="logs/44k/G_37600.pth", config_path="logs/44k/config.json", clip=0, clean_names=["demo.wav"], trans=[0], spk_list=['Kanye'], f0p="crepe", auto_predict_f0=False, \
+def run_inference(model_path="logs/44k/G_37600.pth", config_path="logs/44k/config.json", clean_names=["demo.wav"], trans=[0], spk_list=['Kanye'], clip=0, f0p="crepe", auto_predict_f0=False, \
                 cluster_model_path="", cluster_infer_ratio=0, lg=0, enhance=False, \
                 shallow_diffusion=False, use_spk_mix=False, loudness_envelope_adjustment=1, fr=False, \
                 diffusion_model_path="logs/44k/diffusion/model_0.pt", diffusion_config_path="logs/44k/diffusion/config.yaml", \
@@ -34,10 +34,9 @@ def run_inference(model_path="logs/44k/G_37600.pth", config_path="logs/44k/confi
     
     infer_tool.fill_a_to_b(trans, clean_names)
     result_paths = []
+    # print(clean_names, "clean_names")
     for clean_name, tran in zip(clean_names, trans):
-        print(f"cleanname: {clean_name}")
-        if clean_name == 0:
-            break
+        # print(f"cleanname: {clean_name}")
         raw_audio_path = os.path.join(UPLOAD_FOLDER, clean_name)
         infer_tool.format_wav(raw_audio_path)
         for spk in spk_list:
@@ -112,14 +111,14 @@ def index():
         # wav_format = 'wav'
 
         files = request.files.getlist('files')
-        print(files)
+        print("files",files)
         for file in files:
             if file:
                 filename = file.filename
-                if filename.endswith('wav'):
-                    print(filename)
-                    clean_names.append(filename)
-                    print(clean_names, "clean_names")
+                # if filename.endswith('wav'):
+                #     print(filename)
+                clean_names.append(filename)
+                    # print(clean_names, "clean_names")
                 file.save(os.path.join(UPLOAD_FOLDER, filename))
         
         result_paths = run_inference(model_path, config_path, clean_names, trans, spk_list, clip,  f0p)

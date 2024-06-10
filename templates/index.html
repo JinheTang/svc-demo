@@ -6,6 +6,27 @@
     <title>So-VITS Inference</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
     <link rel="stylesheet" href="static/css/style.css">
+    <style>
+        .spinner {
+            display: none;
+            margin: 20px auto;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body class="bg">
@@ -15,98 +36,98 @@
         </nav>
     </div>
     <div class="form-container">
-        <form action="/" method="POST" enctype="multipart/form-data">
+        <form id="inferenceForm" action="/" method="POST" enctype="multipart/form-data">
             <label for="model_path">Model Path:</label>
-            <input type="text" name="model_path" value="logs/44k/ye200k/G_199200.pth"><br>
+            <input type="text" name="model_path" value="logs/44k/G_232800.pth"><br>
 
             <label for="config_path">Config Path:</label>
-            <input type="text" name="config_path" value="logs/44k/ye200k/config.json"><br>
-
-            <!-- <label for="clip">Clip (seconds):</label>
-        <input type="number" name="clip" step="0.1" value="0"><br> -->
+            <input type="text" name="config_path" value="logs/44k/config.json"><br>
 
             <label for="trans">Transpositions:</label>
             <input type="number" name="trans" value="0" step="1"><br>
 
             <label for="spk_list">Speaker:</label>
-            <input type="text" name="spk_list" value="Kanye"><br>
-
-            <!-- <label for="auto_predict_f0">Auto Predict F0:</label>
-        <input type="checkbox" name="auto_predict_f0"><br> -->
-            <!-- 
-        <label for="cluster_model_path">Cluster Model Path:</label>
-        <input type="text" name="cluster_model_path" value=""><br> -->
-
-            <!-- <label for="cluster_infer_ratio">Cluster Infer Ratio:</label>
-        <input type="number" name="cluster_infer_ratio" step="0.1" value="0"><br> -->
-
-            <!-- <label for="slice_db">Slice DB:</label>
-        <input type="number" name="slice_db" value="-40"><br> -->
-
-            <!-- <label for="noice_scale">Noise Scale:</label>
-        <input type="number" name="noice_scale" step="0.1" value="0.4"><br> -->
-
-            <!-- <label for="pad_seconds">Pad Seconds:</label>
-        <input type="number" name="pad_seconds" step="0.1" value="0.5"><br>
-
-        <label for="linear_gradient">Linear Gradient:</label>
-        <input type="number" name="linear_gradient" step="0.1" value="0"><br>
-
-        <label for="linear_gradient_retain">Linear Gradient Retain:</label>
-        <input type="number" name="linear_gradient_retain" step="0.1" value="0.75"><br> -->
+            <input type="text" name="spk_list" value="jay"><br>
 
             <label for="f0_predictor">Predictor:</label>
             <select id="f0_predictor" name="f0_predictor">
                 <option value="crepe">crepe</option>
                 <option value="pm">pm</option>
                 <option value="dio">dio</option>
-
-            </select>
-            <!-- 
-        <label for="enhance">Enhance:</label>
-        <input type="checkbox" name="enhance"><br>
-
-        <label for="enhancer_adaptive_key">Enhancer Adaptive Key:</label>
-        <input type="number" name="enhancer_adaptive_key" step="1" value="0"><br>
-
-        <label for="f0_filter_threshold">F0 Filter Threshold:</label>
-        <input type="number" name="f0_filter_threshold" step="0.1" value="0"><br>
-
-        <label for="diffusion_model_path">Diffusion Model Path:</label>
-        <input type="text" name="diffusion_model_path" value=""><br>
-
-        <label for="diffusion_config_path">Diffusion Config Path:</label>
-        <input type="text" name="diffusion_config_path" value=""><br>
-
-        <label for="k_step">K Step:</label>
-        <input type="number" name="k_step" step="1" value="0"><br>
-
-        <label for="only_diffusion">Only Diffusion:</label>
-        <input type="checkbox" name="only_diffusion"><br>
-
-        <label for="shallow_diffusion">Shallow Diffusion:</label>
-        <input type="checkbox" name="shallow_diffusion"><br>
-
-        <label for="use_spk_mix">Use Speaker Mix:</label>
-        <input type="checkbox" name="use_spk_mix"><br>
-
-        <label for="second_encoding">Second Encoding:</label>
-        <input type="checkbox" name="second_encoding"><br>
-
-        <label for="loudness_envelope_adjustment">Loudness Envelope Adjustment:</label>
-        <input type="number" name="loudness_envelope_adjustment" step="0.1" value="0"><br> -->
-
-            <!-- <label for="wav_format">WAV Format:</label>
-        <input type="text" name="wav_format" value="wav"><br> -->
+            </select><br>
 
             <label for="files">Audio Files:</label>
+            <input class="inputfile" type="file" id="files" name="files" multiple>
+            <button type="button" class="recording" id="startRecording">Start Recording</button><br>
 
-            <input type="file" name="files" multiple><br>
+            <div id="audioPreview"></div>
+
             <div style="text-align: center;">
                 <button type="submit">Run Inference</button>
             </div>
         </form>
+        <div class="spinner" id="spinner"></div>
     </div>
+
+    <script>
+        document.getElementById('files').addEventListener('change', function(event) {
+            const files = event.target.files;
+            const preview = document.getElementById('audioPreview');
+            preview.innerHTML = '';
+
+            Array.from(files).forEach(file => {
+                const audio = document.createElement('audio');
+                audio.controls = true;
+                audio.src = URL.createObjectURL(file);
+                preview.appendChild(audio);
+            });
+        });
+
+        const startRecordingButton = document.getElementById('startRecording');
+        let mediaRecorder;
+        let audioChunks = [];
+
+        startRecordingButton.addEventListener('click', async function() {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                startRecordingButton.textContent = "Start Recording";
+                return;
+            }
+
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+
+            mediaRecorder.addEventListener("dataavailable", event => {
+                audioChunks.push(event.data);
+            });
+
+            mediaRecorder.addEventListener("stop", () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = document.createElement('audio');
+                audio.controls = true;
+                audio.src = audioUrl;
+
+                const preview = document.getElementById('audioPreview');
+                preview.innerHTML = '';
+                preview.appendChild(audio);
+
+                const formData = new FormData();
+                formData.append('files', audioBlob, 'recording.wav');
+
+                // Optional: Automatically submit the form
+                // document.getElementById('inferenceForm').submit();
+            });
+
+            mediaRecorder.start();
+            startRecordingButton.textContent = "Stop Recording";
+        });
+
+        document.getElementById('inferenceForm').addEventListener('submit', function() {
+            document.getElementById('spinner').style.display = 'block';
+        });
+    </script>
 </body>
 
 </html>
